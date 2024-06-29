@@ -13,7 +13,8 @@ struct TreeNode {
 };
 class Solution {
 public:
-    vector<int> postorderTraversal(TreeNode* root) {
+    
+    vector<int> postorderTraversal2stack(TreeNode* root) {
         stack<TreeNode*> st1,st2;
         vector<int> post;
         if(!root){
@@ -29,6 +30,28 @@ public:
         while(!st2.empty()){
             TreeNode* node = st2.top(); st2.pop();
             post.push_back(node->val);
+        }
+        return post;
+    }
+    vector<int> postorderTraversal1stack(TreeNode* root) {
+        stack<TreeNode*> st1,st2;
+        vector<int> post;
+        if(!root){
+            return post;
+        }
+        st1.push(root);
+        while(!st1.empty()){
+            TreeNode* node = st1.top();st1.pop();
+            post.push_back(node->val);
+            if(node->left)st1.push(node->left);
+            if(node->right)st1.push(node->right);
+        }
+        int i = 0, j = post.size()-1;
+        while(i <= j){
+            int temp = post[i];
+            post[i] = post[j];
+            post[j] = temp;
+            i++;j--;
         }
         return post;
     }
@@ -48,7 +71,7 @@ int main() {
     root->left->right = new TreeNode(5);
 
     Solution solution;
-    vector<int> result = solution.postorderTraversal(root);
+    vector<int> result = solution.postorderTraversal2stack(root);
 
     for (const auto& level : result) {
         cout<<level<<" ";
