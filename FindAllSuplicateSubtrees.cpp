@@ -1,5 +1,8 @@
 //{ Driver Code Starts
 #include <bits/stdc++.h>
+#include <cstddef>
+#include <string>
+#include <vector>
 using namespace std;
 
 struct Node {
@@ -24,7 +27,7 @@ Node* buildTree(string str) {
     vector<string> ip;
 
     istringstream iss(str);
-    for (string str; iss >> str;)
+    for (string str; iss >> str;)ver
         ip.push_back(str);
 
     // Create the root of the tree
