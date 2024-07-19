@@ -29,14 +29,51 @@ class Solution {
         }
         return ret;
     }
+    
+    void getLeaves(TreeNode* node, vector<nodePos> &leaves, int64_t depth, int64_t pos){
+        if(node->left != nullptr){
+            getLeaves(node->left, leaves, depth+1, pos);
+        }
+        if(node->right != nullptr){
+            getLeaves(node->right, leaves, depth+1, pos | int64_t(1) << depth);
+        }
+        if(node->left == nullptr && node->right == nullptr){
+            nodePos n;
+            n.depth = depth;
+            n.pos = pos;
+            leaves.emplace_back(n);
+        }
+    }
 public:
     int countPairs(TreeNode* root, int distance) {
         //? approach 1
-        bool flg = false;
-        int cnt = 0;
-        dfs(root, distance, cnt);
-        return cnt;
+        // bool flg = false;
+        // int cnt = 0;
+        // dfs(root, distance, cnt);
+        // return cnt;
 
+
+        std:: vector<nodePos> leaves;
+        getLeaves(root, leaves, 0, 0); //( node, leaves[], depth, pos);
+        int result = 0;
+
+        for(size_t i = 0; i < size(leaves) - 1; i++){
+            auto fd = leaves[i].depth;
+            auto fp = leaves[i].pos;
+            for(size_t j = i+1; j < size(leaves); j++){
+                auto sd = leaves[j].depth;
+                auto sp = leaves[j].pos;
+
+                auto diff = __builtin_ctzl(fp ^ sp);
+
+                auto d = fd + sd - 2*diff;
+                if(d == 0 && fd != sd){
+                    d = std::abs(fd-sd);
+                }
+                result += d <= distance;
+            }
+        }
+        return result;
 
     }
 };
